@@ -5,10 +5,12 @@ services:
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: controller
-      KAFKA_LISTENERS: CONTROLLER//:9093
+      KAFKA_LISTENERS: CONTROLLER://:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOLS: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093, 2@kafka-controller-2:9093, 3@kafka-controller-3:9093
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
     networks:
       - Arshavin023
     volumes:
@@ -20,10 +22,12 @@ services:
     environment:
       KAFKA_NODE_ID: 2
       KAFKA_PROCESS_ROLES: controller
-      KAFKA_LISTENERS: CONTROLLER//:9093
+      KAFKA_LISTENERS: CONTROLLER://:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOLS: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093, 2@kafka-controller-2:9093, 3@kafka-controller-3:9093
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
     networks:
       - Arshavin023
     volumes:
@@ -35,10 +39,12 @@ services:
     environment:
       KAFKA_NODE_ID: 3
       KAFKA_PROCESS_ROLES: controller
-      KAFKA_LISTENERS: CONTROLLER//:9093
+      KAFKA_LISTENERS: CONTROLLER://:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOLS: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093, 2@kafka-controller-2:9093, 3@kafka-controller-3:9093
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
     networks:
       - Arshavin023
     volumes:
@@ -53,12 +59,12 @@ services:
     environment:
       KAFKA_NODE_ID: 4
       KAFKA_PROCESS_ROLES: broker
-      KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://9092'
+      KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://:9092'
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-1:19092, PLAINTEXT_HOST://localhost:29092'
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT, PLAINTEXT:PLAINTEXT_HOST:PLAINTEXT'
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093, 2@kafka-controller-2:9093, 3@kafka-controller-3:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     depends_on:
       - kafka-controller-1
@@ -77,12 +83,12 @@ services:
     environment:
       KAFKA_NODE_ID: 5
       KAFKA_PROCESS_ROLES: broker
-      KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://9092'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-1:19092, PLAINTEXT_HOST://localhost:39092'
+      KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-2:19092,PLAINTEXT_HOST://localhost:39092'
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT, PLAINTEXT:PLAINTEXT_HOST:PLAINTEXT'
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093, 2@kafka-controller-2:9093, 3@kafka-controller-3:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT, PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     depends_on:
       - kafka-controller-1
@@ -101,12 +107,12 @@ services:
     environment:
       KAFKA_NODE_ID: 6
       KAFKA_PROCESS_ROLES: broker
-      KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://9092'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-1:19092, PLAINTEXT_HOST://localhost:49092'
+      KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-3:19092, PLAINTEXT_HOST://localhost:49092'
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT, PLAINTEXT:PLAINTEXT_HOST:PLAINTEXT'
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093, 2@kafka-controller-2:9093, 3@kafka-controller-3:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT, PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     depends_on:
       - kafka-controller-1
@@ -124,11 +130,9 @@ services:
       - "18081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka-broker-1:19092, kafka-broker-2:19092, kafka-broker-3:19092
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka-broker-1:19092,kafka-broker-2:19092,kafka-broker-3:19092
       SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
-      SCHEMA_REGISTRY_LISTENERS: http:0.0.0.0:18081  
-    # volumes:
-    #   - ./jmx_exporter:/usr/share/jnx_exporter/
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:18081  
     depends_on:
       - kafka-broker-1
       - kafka-broker-2
@@ -147,24 +151,26 @@ services:
       - schema-registry
     environment:
       CONFIG_FILEPATH: /tmp/config.yml
-      CONSOLE_CONFIG_FILE: > 
+      CONSOLE_CONFIG_FILE: |
         kafka:
           brokers: ["kafka-broker-1:19092","kafka-broker-2:19092","kafka-broker-2:19092"]
           schemaRegistry:
-            enabled" true
+            enabled: true
             urls: ["http://schema-registry:18081"]
         
         redpanda:
           adminApi:
             enabled: false
             urls: ["http://kafka_broker:9644"]
+        
         connect:
           enabled: false
           clusters:
             - name: local-connect-cluster
-            - url: http://connect:8083
+              url: http://connect:8083
     networks:
       - Arshavin023
+
 
 volumes:
   controller_data_1:
