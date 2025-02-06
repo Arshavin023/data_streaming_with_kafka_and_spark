@@ -36,7 +36,7 @@ logging.basicConfig(
 
 logger = logging.getLogger("KafkaSparkProject")
 
-KAFKA_BROKERS="localhost:29092,localhost:39092,localhost:49092"
+KAFKA_BROKERS='kafka-broker-1:19092,kafka-broker-2:19092,kafka-broker-3:19092' #"localhost:29092,localhost:39092,localhost:49092"
 NUM_PARTITIONS = 5
 REPLICATION_FACTOR = 3
 TOPIC_NAME = 'financial_transactions'
@@ -84,10 +84,10 @@ def generate_transaction():
         amount=round(random.uniform(50000, 500000), 2),
         transactionTime=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         merchantId=random.choice(['OPAY','MONIEPOINT','PALMPAY','OKCash']),
-        transaction_type = random.choice(['purchase','refund']),
+        transactionType = random.choice(['purchase','refund']),
         location = random.choice(nigerian_states),
-        payment_method = random.choice(['POS/CreditCard','Cash','USSD Transfer','Online Banking','3rd-Party OnlineBanking']),
-        international_transaction = random.choice([True, False]),
+        paymentMethod = random.choice(['POS/CreditCard','Cash','USSD Transfer','Online Banking','3rd-Party OnlineBanking']),
+        isInternationalTransaction = random.choice([True, False]),
         currency = random.choice(['NGN','USD','GBP','YEN','EUR'])
     )
 
@@ -141,5 +141,6 @@ def parallel_producer(num_threads: int, transactions_per_thread:int, total_trans
 
 if __name__=="__main__":
     create_topic(TOPIC_NAME)
-    parallel_producer(5,100000,1000000)
-
+    parallel_producer(5,500,2500)
+    # Delay for 5 minutes (300 seconds)
+    # time.sleep(600)
