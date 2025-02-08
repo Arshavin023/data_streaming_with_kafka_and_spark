@@ -140,7 +140,8 @@ def parallel_producer(num_threads: int, transactions_per_thread:int, total_trans
 
 
 if __name__=="__main__":
-    create_topic(TOPIC_NAME)
-    parallel_producer(5,500,2500)
+    while True:
+        create_topic(TOPIC_NAME)
+        parallel_producer(5,500,2500)
     # Delay for 5 minutes (300 seconds)
-    # time.sleep(600)
+        time.sleep(300)

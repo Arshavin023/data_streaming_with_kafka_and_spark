@@ -48,47 +48,47 @@ x-kafka-controller-env: &kafka-controller-env
   KAFKA_CLUSTER_ID: 5L6g3nShT-eMCtK-X86sw
   KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/tmp/log4j.properties
 
-x-kafka-broker-base: &kafka-broker-base
-  image: apache/kafka:3.8.1
-  restart: on-failure
-  command:
-    - /bin/sh
-    - -c 
-    - |
-      echo '
-      log4j.rootLogger=INFO, stdout, kafkaAppender
-      log4j.appender.stdout=org.apache.log4j.ConsoleAppender
-      log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
-      log4j.appender.stdout.layout.ConversionPattent=[%d] %p %m (%c)%n
-      log4j.appender.kafkaAppender=org.apache.log4j.RollingFileAppender
-      log4j.appender.kafkaAppender.File=/opt/kafka/logs/kafka.log
-      log4j.appender.kafkaAppender.MaxFileSize=10MB
-      log4j.appender.kafkaAppender.MaxBackupIndex=10
-      log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout
-      log4j.appender.kafkaAppender.layout.ConversionPattent=[%d] %p %m (%c)%n
-      ' > /tmp/log4j.properties
-      /etc/kafka/docker/run
-  volumes:
-    - ./volumes/jmx_exporter:/usr/share/jmx_exporter/
-  networks:
-    - Arshavin023
-  healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "9092"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
+# x-kafka-broker-base: &kafka-broker-base
+#   image: apache/kafka:3.8.1
+#   restart: on-failure
+#   command:
+#     - /bin/sh
+#     - -c 
+#     - |
+#       echo '
+#       log4j.rootLogger=INFO, stdout, kafkaAppender
+#       log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+#       log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+#       log4j.appender.stdout.layout.ConversionPattent=[%d] %p %m (%c)%n
+#       log4j.appender.kafkaAppender=org.apache.log4j.RollingFileAppender
+#       log4j.appender.kafkaAppender.File=/opt/kafka/logs/kafka.log
+#       log4j.appender.kafkaAppender.MaxFileSize=10MB
+#       log4j.appender.kafkaAppender.MaxBackupIndex=10
+#       log4j.appender.kafkaAppender.layout=org.apache.log4j.PatternLayout
+#       log4j.appender.kafkaAppender.layout.ConversionPattent=[%d] %p %m (%c)%n
+#       ' > /tmp/log4j.properties
+#       /etc/kafka/docker/run
+#   volumes:
+#     - ./volumes/jmx_exporter:/usr/share/jmx_exporter/
+#   networks:
+#     - Arshavin023
+#   healthcheck:
+#       test: ["CMD", "nc", "-z", "localhost", "9092"]
+#       interval: 15s
+#       timeout: 5s
+#       retries: 5
 
-x-kafka-broker-env: &kafka-broker-env
-  KAFKA_PROCESS_ROLES: broker
-  KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://:9092'
-  # KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-1:19092,PLAINTEXT_HOST://kafka-broker-1:9092' #localhost:29092'
-  KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-  KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-  KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
-  KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-  KAFKA_CLUSTER_ID: 5L6g3nShT-eMCtK-X86sw
-  KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/tmp/log4j.properties
+# x-kafka-broker-env: &kafka-broker-env
+#   KAFKA_PROCESS_ROLES: broker
+#   KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://:9092'
+#   KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-1:19092,PLAINTEXT_HOST://kafka-broker-1:9092' #localhost:29092'
+#   KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+#   KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+#   KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+#   KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
+#   KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+#   KAFKA_CLUSTER_ID: 5L6g3nShT-eMCtK-X86sw
+#   KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/tmp/log4j.properties
 
 services:
   kafka-controller-1:
@@ -136,67 +136,91 @@ services:
   
 
   kafka-broker-1:
-    <<: *kafka-broker-base
     image: apache/kafka:3.8.1
     container_name: kafka-broker-1
     ports:
-      - "29092:9092"
+      - "39092:9092"
     environment:
-      <<: *kafka-broker-env
-      KAFKA_NODE_ID: 4
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-1:19092,PLAINTEXT_HOST://kafka-broker-1:9092' #localhost:29092'
-      KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/tmp/log4j.properties
-      KAFKA_OPTS: "-javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.1.0.jar=9300:/usr/share/jmx_exporter/kafka-broker.yml"
+      KAFKA_NODE_ID: 5
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-1:19092,PLAINTEXT_HOST://kafka-broker-1:9092' #localhost:39092'
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     depends_on:
       - kafka-controller-1
       - kafka-controller-2
       - kafka-controller-3
     volumes:
-      - ./volumes/broker_data_1:/var/lib/kafka/data
-      - ./logs/broker-logs_1:/opt/kafka/logs
-      - ./volumes/jmx_exporter:/usr/share/jmx_exporter/
-  
+      - broker_data_1:/var/lib/data
+    networks:
+      - Arshavin023
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      
   kafka-broker-2:
-    <<: *kafka-broker-base
     image: apache/kafka:3.8.1
     container_name: kafka-broker-2
     ports:
       - "39092:9092"
     environment:
-      <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-2:19092,PLAINTEXT_HOST://kafka-broker-2:9092' #localhost:29092'
-      KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/tmp/log4j.properties
-      KAFKA_OPTS: "-javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.1.0.jar=9300:/usr/share/jmx_exporter/kafka-broker.yml"
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-2:19092,PLAINTEXT_HOST://kafka-broker-2:9092' #localhost:39092'
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     depends_on:
       - kafka-controller-1
       - kafka-controller-2
       - kafka-controller-3
     volumes:
-      - ./volumes/broker_data_2:/var/lib/kafka/data
-      - ./logs/broker-logs_2:/opt/kafka/logs
-      - ./volumes/jmx_exporter:/usr/share/jmx_exporter/
+      - broker_data_2:/var/lib/data
+    networks:
+      - Arshavin023
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
   
   kafka-broker-3:
-    <<: *kafka-broker-base
     image: apache/kafka:3.8.1
     container_name: kafka-broker-3
     ports:
       - "49092:9092"
     environment:
-      <<: *kafka-broker-env
       KAFKA_NODE_ID: 6
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: 'PLAINTEXT://:19092,PLAINTEXT_HOST://:9092'
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-broker-3:19092,PLAINTEXT_HOST://kafka-broker-3:9092' #localhost:49092'
-      KAFKA_LOG4J_OPTS: -Dlog4j.configuration=file:/tmp/log4j.properties
-      KAFKA_OPTS: "-javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-1.1.0.jar=9300:/usr/share/jmx_exporter/kafka-broker.yml"
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT, PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-controller-1:9093,2@kafka-controller-2:9093,3@kafka-controller-3:9093
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     depends_on:
       - kafka-controller-1
       - kafka-controller-2
       - kafka-controller-3
     volumes:
-      - ./volumes/broker_data_3:/var/lib/kafka/data
-      - ./logs/broker-logs_3:/opt/kafka/logs
-      - ./volumes/jmx_exporter:/usr/share/jmx_exporter/
+      - broker_data_3:/var/lib/data
+    networks:
+      - Arshavin023
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
   
   schema-registry:
     image: confluentinc/cp-schema-registry:7.5.1

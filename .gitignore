@@ -137,6 +137,7 @@ env.bak/
 venv.bak/
 mnt/
 logs/
+volumes/
 
 # Spyder project settings
 .spyderproject
